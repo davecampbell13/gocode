@@ -67,7 +67,11 @@ def run_server():
         client_connection, client_address = listen_socket.accept()
         request = client_connection.recv(4096)
         split_request = request.split()
+        print split_request
         request_verb = split_request[0]
+        request_file = split_request[1]
+        print request_verb
+        print request_file
 
         if not request:
             continue
