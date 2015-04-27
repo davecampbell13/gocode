@@ -11,12 +11,6 @@ User Stories:
 5) User can see what cards they have been dealt
 6) User can only see one dealer card, not the bottom card
 
-Tips:
-1) Aces can count as an eleven or a one - but it only counts as a one if your score is over 21
-2) Research random.shuffle()
-3) You are not allowed to code until you design your program!
-4) Research __radd__ - it is a built-in method in Python
-
 Extension:
 1) Multiple users can play blackjack game in terminal in a turn-based game
 2) Consider using the stack data structure
@@ -36,6 +30,7 @@ rank_dict = {"j" : "Jack", "q" : "Queen", "k" : "King", "a" : "Ace"}
 
 class Card:
     def __init__(self,suit,rank):
+    # initialize instance of Card with values for suit and rank values
         self.suit = suit
         self.suit = suit_dict[self.suit]
         self.rank = rank
@@ -48,10 +43,8 @@ class Card:
     def __repr__(self):
         return self.rank + " of " + self.suit
 
-    def __radd__(self,other):
-        pass
-
     def value(self):
+    # assigns value for Aces, face cards, and numeric cards
         if self.rank == "Ace":
             self.val = 11
         elif self.rank in ["Jack", "Queen", "King"]:
@@ -62,6 +55,7 @@ class Card:
 
 
 class Deck:
+    # initialize an instance of a deck and shuffle it
     def __init__(self):
         self.deck = [Card(s,r) for s in suits for r in rank]
 
@@ -76,23 +70,19 @@ class Deck:
 
 
 class Player:
+    # initialze an instance of a player and related qualities like getting a new card and choosing to hit or stand
     def __init__(self,name):
         self.name = name
         self.thehand = []
 
     def __str__(self):
         return self.name
-
-    def __lt__(self,other):
-        # controls less than operator
-        pass
     
     def get(self,card):
         #"adds a card to the users hand"
         self.thehand.append(card)
 
     def choose(self):
-        #"ui, ask user to hit or stand"
         self.decision = raw_input("Do you want to h)it or s)tand? ")
 
         if self.decision.lower() == "h":
@@ -104,8 +94,6 @@ class Player:
             return self.choose()
 
     def hand(self):
-        #"calculate the number value of the users hand"
-
         self.total = sum([card.value() for card in self.thehand])
         
         if self.total > 21:
@@ -127,10 +115,11 @@ class Player:
         return "You win!"
 
     def bustprompt(self):
-        return "You busted. You lose!"
+        return "You busted. You're out!"
 
 
 class Dealer(Player):
+    # initialize an instance of Dealer, which inherits from Player, but has a different choose() method
     def __init__(self,name):
        Player.__init__(self,name)
 
@@ -151,6 +140,7 @@ class Dealer(Player):
 
     
 class Game:
+    # initialize an instance of the game, including an empty player array, creating a deck, and game-specific methods
     def __init__(self):
 
         self.players = []
@@ -188,19 +178,33 @@ class Game:
             for n in range(0,2):
                 i.get(self.thedeck.one())
 
+    def initialresults(self):
+        for i in self.players[0:-1]:
+            if i.won() == True:
+                print z.winprompt()
+
+        if self.players[-1].won():
+            print "The dealer hit blackjack."
+    
+
     def results(self):
-        if self.thedealer.hand() > self.theplayer.hand():
-            print "The dealer has more points and wins."
+        for i in self.players[0:-1]:
+            print i
+            print i.hand()
 
-        if self.thedealer.hand() < self.theplayer.hand():
-            print "You have more points and win!"
+        # if self.thedealer.hand() > self.theplayer.hand():
+        #     print "The dealer has more points and wins."
 
-        if self.thedealer.hand() == self.theplayer.hand():
-            print "It's a tie. No blood."
+        # if self.thedealer.hand() < self.theplayer.hand():
+        #     print "You have more points and win!"
+
+        # if self.thedealer.hand() == self.theplayer.hand():
+        #     print "It's a tie. No blood."
 
     def play(self):
         self.deal()
         self.print_table()
+        self.initialresults()
 
         #for i in self.players[0:-1]:
 
@@ -218,19 +222,19 @@ class Game:
             return
 
         for z in self.players:
-            self.print_table()
-            print "%s's Turn:" % (z)
+            print "\n%s's Turn:" % (z)
             while z.choose():
+                print "\nIt's still %s's Turn:" % (z)
                 z.get(self.thedeck.one())
                 self.print_table()
 
                 if z.won() == True:
                     print z.winprompt()
-                    return
+                    break
 
                 if z.bust() == True:
                     print z.bustprompt()
-                    return 
+                    break 
 
         self.results()
 
