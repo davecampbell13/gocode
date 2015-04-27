@@ -40,7 +40,6 @@ import socket
 HOST, PORT = '', 8888
 VIEWS_DIR = "./views"
 
-
 def create_string(filename):
     with open(filename, "r") as f:
         lines = f.readlines()
@@ -48,17 +47,28 @@ def create_string(filename):
         html = "\HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n" + string
         return html
 
-def render_string(html_string):
-	replaced = html_string.replace("###Title###","This is Templating")
-	return replaced
+def render_string(html_string, context):
+	print context
+	new_html = html_string
+	for i in context:
+		new_html = new_html.replace("###" + i + "###", context[i])
+	return new_html
 
 def index_page():
+	context = {
+	"Title":"Welcome to the Home Page",
+	"BlogText":"This is the home page content."}
 	html_string = create_string("views/index.html")
-	new_html = render_string(html_string)
+	new_html = render_string(html_string, context)
 	return new_html
 
 def about_page():
-	return create_string("views/about.html")
+	context = {
+	"Title":"About Page",
+	"BlogText":"This is about page data"}
+	html_string = create_string("views/about.html")
+	new_html = render_string(html_string, context)
+	return new_html
 
 def page_404():
 	return create_string("views/404.html")
