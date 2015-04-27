@@ -73,13 +73,32 @@ def run_server():
         print request_verb
         print request_file
 
+        if request_file == "/favicon.ico":
+            continue
+
+        if request_file == "/":
+            with open("views/index.html", "r") as f:
+                lines = f.readlines()
+                string = "\n".join(lines)
+                print string                
+                http_response = "\
+    HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n" + string
+
+        if request_file == "/about":
+            with open("views/about.html", "r") as f:
+                lines = f.readlines()
+                string = "\n".join(lines)
+                print string                
+                http_response = "\
+    HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n" + string
+
         if not request:
             continue
 
-        http_response = """\
-    HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n
-    <html><body><h1>Hello, World!<h1><h2>Test</h2></body></html>
-    """
+    #     http_response = """\
+    # HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n
+    # <html><body><h1>Hello, World!<h1><h2>Test</h2></body></html>
+    # """
 
         client_connection.sendall(http_response)
         client_connection.close()
