@@ -27,20 +27,24 @@ import socket
 HOST, PORT = '', 8888
 VIEWS_DIR = "./views"
 
-urls = {"/" : index_page, "/about" : about_page}
 
 def create_string(filename):
     with open(filename, "r") as f:
         lines = f.readlines()
         string = "\n".join(lines)
-        http_response = "\HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n" + string
-        return http_response
+        html = "\HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n" + string
+        return html
 
 def index_page():
 	return create_string("views/index.html")
 
 def about_page():
 	return create_string("views/about.html")
+
+def page_404():
+	return create_string("views/404.html")
+
+urls = {"/" : index_page, "/about" : about_page}
 
 def run_server():
     listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -58,12 +62,12 @@ def run_server():
         request_file = split_request[1]
 
         if not request:
-            continue
+            page_404()
 
         if request_file == "/favicon.ico":
             continue
 
-        http_response = url[request_file]()
+        http_response = urls[request_file]()
         
         client_connection.sendall(http_response)
         client_connection.close()
