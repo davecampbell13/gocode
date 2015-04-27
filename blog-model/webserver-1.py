@@ -66,6 +66,8 @@ def run_server():
     while True:
         client_connection, client_address = listen_socket.accept()
         request = client_connection.recv(4096)
+        split_request = request.split()
+        request_verb = split_request[0]
 
         if not request:
             continue
