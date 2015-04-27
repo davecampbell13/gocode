@@ -54,6 +54,12 @@ import socket
 HOST, PORT = '', 8888
 VIEWS_DIR = "./views"
 
+def create_string(filename):
+    with open(filename, "r") as f:
+        lines = f.readlines()
+        string = "\n".join(lines)
+        http_response = "\HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n" + string
+        return http_response
 
 def run_server():
     listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -77,20 +83,10 @@ def run_server():
             continue
 
         if request_file == "/":
-            with open("views/index.html", "r") as f:
-                lines = f.readlines()
-                string = "\n".join(lines)
-                print string                
-                http_response = "\
-    HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n" + string
+            http_response = create_string("views/index.html")
 
         if request_file == "/about":
-            with open("views/about.html", "r") as f:
-                lines = f.readlines()
-                string = "\n".join(lines)
-                print string                
-                http_response = "\
-    HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n" + string
+            http_response = create_string("views/about.html")
 
         if not request:
             continue
