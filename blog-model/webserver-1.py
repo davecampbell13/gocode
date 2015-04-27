@@ -91,11 +91,6 @@ def run_server():
         if not request:
             continue
 
-    #     http_response = """\
-    # HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n
-    # <html><body><h1>Hello, World!<h1><h2>Test</h2></body></html>
-    # """
-
         client_connection.sendall(http_response)
         client_connection.close()
 
