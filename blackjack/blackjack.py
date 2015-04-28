@@ -106,16 +106,20 @@ class Player:
     def bust(self):
         if self.hand() > 21:
             return True
+        else:
+            return False
             
     def won(self):
         if self.hand() == 21:
             return True
+        else:
+            return False
 
     def winprompt(self):
         return "You win!"
 
     def bustprompt(self):
-        return "You busted. You're out!"
+        return "You busted."
 
 
 class Dealer(Player):
@@ -173,54 +177,91 @@ class Game:
         print "========================"
         print "\n"
 
+
+    def print_table_end(self):
+        print "\n\n=====CURRENT SCORES====="
+        for i in self.players[0:-1]:
+            print "%s's Hand:" % (i)
+            for x in i.thehand:
+                print x
+            print "Total: " + str(i.hand()) +"\n"
+
+        print "========================"
+        print "The Dealer's Hand:\n"
+        for x in self.thedealer.thehand:
+            print x
+        print "Total: " + str(self.thedealer.hand()) +"\n"
+        print "========================"
+        print "\n"
+
     def deal(self):
         for i in self.players:
             for n in range(0,2):
                 i.get(self.thedeck.one())
 
-    def initialresults(self):
+    def initial_winner(self):
+        winner_count = 0
+
+        #calculate inital winner
         for i in self.players[0:-1]:
             if i.won() == True:
-                print z.winprompt()
+                winner_count += 1
 
-        if self.players[-1].won():
-            print "The dealer hit blackjack."
-    
+        if self.thedealer.won() == True:
+            if winner_count == 0:
+                print "The Dealer hit blackjack and wins!"
+                return
+            
+            elif winner_count > 0:
+                print "The Dealer hit blackjack and ties with:"
+                for i in self.players[0:-1]:
+                    if i.won() == True:  
+                        print i
+                    if i.won() == False:
+                        print i + " loses."
+                return
+
+        if self.thedealer.won() == False and winner_count > 0:
+                for i in self.players[0:-1]:
+                    if i.won() == True:
+                        print str(i) + " hit blackjack and wins!"
+                return
+
 
     def results(self):
+        #calculate end of game results
         for i in self.players[0:-1]:
-            print i
-            print i.hand()
 
-        # if self.thedealer.hand() > self.theplayer.hand():
-        #     print "The dealer has more points and wins."
+            if self.thedealer.bust() == True:
+                if i.bust() == True:
+                    print "%s busts and the Dealer busts. No blood." % (str(i))
+                    
+                if i.bust() == False:
+                    print "The Dealer busts. %s is a winner." % (str(i))        
+            elif self.thedealer.bust() == False and i.bust() == True:
+                print "%s busts and loses." % (str(i))
 
-        # if self.thedealer.hand() < self.theplayer.hand():
-        #     print "You have more points and win!"
+            elif self.thedealer.won == True:
+                if i.won() == True:
+                    print "%s and the Dealer hit blackjack. No blood." % (str(i))
+                else:
+                    "%s hit blackjack and wins." % (str(i))
 
-        # if self.thedealer.hand() == self.theplayer.hand():
-        #     print "It's a tie. No blood."
+            elif i.bust() == False:
+                if i.hand() > self.thedealer.hand(): 
+                    print "%s has more than the dealer and wins." % (str(i))
+
+                elif i.hand() < self.thedealer.hand():
+                    print "%s has less than the dealer and loses." % (str(i))
+
+                elif i.hand() == self.thedealer.hand():
+                    print "%s has the same as the dealer and ties." % (str(i))  
 
     def play(self):
         self.deal()
         self.print_table()
-        self.initialresults()
-
-        #for i in self.players[0:-1]:
-
-        # if more than one player hits blackjack, they both win.
-        # if one player hits black jack, they win.
-        # if no players hit blackjack, but the dealer hits blackjack, the dealer wins
-        # if no one hits blackjack, continue
-
-        if self.theplayer.won() == True:
-            print "You hit Blackjack! Winner!"
-            return
-
-        if self.thedealer.won() == True:
-            print "Bummer. The dealer hit Blackjack."
-            return
-
+        
+        # begin turn play for players
         for z in self.players:
             print "\n%s's Turn:" % (z)
             while z.choose():
@@ -228,14 +269,10 @@ class Game:
                 z.get(self.thedeck.one())
                 self.print_table()
 
-                if z.won() == True:
-                    print z.winprompt()
-                    break
-
                 if z.bust() == True:
                     print z.bustprompt()
                     break 
-
+        self.print_table_end()
         self.results()
 
 g = Game()
