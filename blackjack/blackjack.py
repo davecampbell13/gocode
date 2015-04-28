@@ -98,7 +98,7 @@ class Player:
         
         if self.total > 21:
             for i in self.thehand:
-                if i.rank == "a":
+                if i.rank == "Ace":
                     self.total -= 10
 
         return self.total
