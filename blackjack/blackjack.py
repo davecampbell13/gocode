@@ -163,6 +163,7 @@ class Game:
         self.play()
 
     def print_table(self):
+        # print current player scores while showing only dealer's first card
         print "\n\n=====CURRENT SCORES====="
         for i in self.players[0:-1]:
             print "%s's Hand:" % (i)
@@ -179,6 +180,7 @@ class Game:
 
 
     def print_table_end(self):
+        # print all player's scores and dealer's full hand
         print "\n\n=====CURRENT SCORES====="
         for i in self.players[0:-1]:
             print "%s's Hand:" % (i)
@@ -195,11 +197,14 @@ class Game:
         print "\n"
 
     def deal(self):
+        # deal two cards to every player
         for i in self.players:
             for n in range(0,2):
                 i.get(self.thedeck.one())
 
     def initial_winner(self):
+        # currently not using this feature
+
         winner_count = 0
 
         #calculate inital winner
@@ -229,7 +234,7 @@ class Game:
 
 
     def results(self):
-        #calculate end of game results
+        #calculate and print end of game results
         for i in self.players[0:-1]:
 
             if self.thedealer.bust() == True:
@@ -258,10 +263,10 @@ class Game:
                     print "%s has the same as the dealer and ties." % (str(i))  
 
     def play(self):
+        # standard game play for players and dealer
         self.deal()
         self.print_table()
         
-        # begin turn play for players
         for z in self.players:
             print "\n%s's Turn:" % (z)
             while z.choose():
@@ -272,6 +277,7 @@ class Game:
                 if z.bust() == True:
                     print z.bustprompt()
                     break 
+        
         self.print_table_end()
         self.results()
 
