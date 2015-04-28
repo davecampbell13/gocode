@@ -42,13 +42,10 @@ file_list = []
 index = {}
 search_terms = []
 
-search = raw_input("What the fuck do you want to search for? ")
+search = raw_input("What do you want to search for? ")
 
 for word in search.split():
     search_terms.append(word)
-
-
-#upgrade your recursive find to return a list of files 
 
 def recursive_find(current_path):
     """recursive find all files and return a list of file names"""
@@ -63,33 +60,26 @@ def recursive_find(current_path):
 
     return file_list
 
-#print recursive_find(current_path)
-
 def read_data(filename):
     with open(filename,"r") as f:
         return f.read()
 
 def strip_punctuation(token):
-    """strip out punctuation from a token"""
+    # strip out punctuation from a token
     token = "".join(l for l in token if l not in string.punctuation)
     return token
 
 def index_file(filename):
+    # index one file return a cleaned array of words
     clean_words = strip_punctuation(read_data(filename))
     word_array = []
     for word in clean_words.split():
         word_array.append(word)
     return word_array
    
-    """Index one file return a cleaned array of words"""
-
-#print add index_file("./folder-1/a.txt/a.txt"),file.{}
-
-#index = {"surfing" : ["filename1", "filename2"]}
-
 
 def add_to_index(words,filename,index):
-    """takes a set of words for a filename and adds it to the index"""
+    # takes a set of words for a filename and adds it to the index
 
     for word in words:
         if word not in index:
@@ -97,9 +87,6 @@ def add_to_index(words,filename,index):
         else:
             index[word].append(filename)
     return index 
-
-
-#print add_to_index(index_file("./folder-1/a.txt/a.txt"),"./folder-1/a.txt/a.txt",{})
 
 
 def index_all_files(file_list,index):
@@ -110,13 +97,9 @@ def index_all_files(file_list,index):
 
     return all_files_index
 
-#print index_all_files(recursive_find(current_path),index)
-
 
 def find_files_with(index,keywords):
-    """takes a list of keywords, and return a list of files with those keywords"""
-    #print index
-    #print keywords
+    # takes a list of keywords, and return a list of files with those keywords
     file_list = []
 
     for word in keywords:
@@ -127,7 +110,7 @@ def find_files_with(index,keywords):
 
     file_list = set(file_list)
 
-    print "Here are your fucking files: "
+    print "Here are your files: "
 
     for afile in file_list:
         print afile
